@@ -1,31 +1,27 @@
-import { createServer, Server } from "http";
-import e, { Express } from "express";
+import express, { Express } from "express";
+import { urlencoded } from "body-parser";
+import adminRouter from "./routes/admin";
+import shopRouter from "./routes/shop";
+import path from "path";
+import rootDir from "./routes/pathHelper";
 
-const app: Express = e();
+export const products: string[] = [];
 
+const app: Express = express();
+
+// parses the request body and calls next().
+app.use(urlencoded());
+
+app.use(express.static(path.join(rootDir, "public")));
+
+// paths starting with /admin are routed to adminRouter
+app.use("/admin", adminRouter);
+
+app.use(shopRouter);
+
+// if the request reaches here, send 404.
 app.use((req, res, next) => {
-    console.log("In the first middleware!");
-    next();
+    res.status(404).sendFile(path.join(rootDir, "views", "404.html"));
 });
 
-app.use((req, res, next) => {
-    console.log("In the second middleware!");
-    res.send(
-        `
-            <html>
-                <header>
-                    <meta charset="UTF-8"/>
-                    <title>Title!</title>
-                </header>
-                <body>Some Html Page</body>
-            </html>
-        `
-    );
-});
-
-app.use((req, res, next) => {
-    console.log("Third middleware is not reached!");
-});
-
-const server: Server = createServer(app);
-server.listen(3000, "localhost");
+app.listen(3000, "localhost");
