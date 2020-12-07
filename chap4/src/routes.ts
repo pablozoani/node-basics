@@ -15,7 +15,6 @@ export const requestHandler = (
                     <html>
                         <header>
                             <meta charset="UTF-8"/>
-                            <title>My First Node Server</title>
                         </header>
                         <body>
                             <h1>Hello From The Server!</h1>
