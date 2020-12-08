@@ -1,10 +1,12 @@
 import { RequestHandler } from "express";
 import Product from "../model/product";
+import { logRequest } from "../util/logger";
 
 let sequence = 0;
 const products: Product[] = [];
 
 export const save: RequestHandler = (req, res, next) => {
+    logRequest(req);
     const title = (req.body as { title: string }).title;
     const product = new Product((sequence++).toString(), title);
     products.push(product);
